@@ -10,11 +10,11 @@
     margin:0;
     background:#e6f4ea;
     display:flex;
-    flex-direction: column;
     justify-content:center;
     align-items:center;
+    height:100vh;
     font-family:'Merriweather', serif;
-    min-height: 100vh;
+    flex-direction: column;
   }
   h1 {
     color: #3b5a3b;
@@ -36,15 +36,6 @@
     font-size: 24px;
     color: #3b5a3b;
   }
-  #palia-schedule {
-    margin-top: 20px;
-    font-size: 16px;
-    color: #3b5a3b;
-    max-height: 400px;
-    overflow-y: auto;
-    text-align: left;
-    width: 80%;
-  }
 </style>
 </head>
 <body>
@@ -53,37 +44,40 @@
   <div id="palia-clock">12:00 AM</div>
   <div id="palia-phase">Phase 🌞</div>
 </div>
-<div id="palia-schedule"></div>
-
 <script>
-// --- Villager schedule ---
-const schedule = {
-"12:00 AM":["Auni: Goes to sleep.","Caleri: Goes to sleep in the restricted zone at the Library.","Einar: Walking home.","Elouisa: Walks from the Library to her home.","Eshe: Walks back to the Mayor's Estate to Eshe's Room to sleep.","Jel: Walks through the field outside of town towards the Fisherman's Lagoon.","Nai'o: Leaves Ormuu pen and goes to bed.","Reth: Goes to The Underground","Sifuu: Leaves the Tavern and walks back to her house to sleep.","Tamala: Walks to her house.","Ulfe: Hiding"],
-"12:45 AM":["Einar: Sleeping."],
-"1:00 AM":["Delaila: Leaves the Tavern.","Jel: Walks towards the Mayor's Estate down on the coast."],
-"1:30 AM":["Jel: Turns and walks over the boardwalk."],
-"2:00 AM":["Jel: Stands near the tree on the little island.","Tamala: Making potions in her house."],
-"2:30 AM":["Zeki: Leaves The Underground to walk home."],
-"2:34 AM":["Delaila: Reaches home."],
-"3:00 AM":["Chayne: Wakes up and walks to the Dragon Shrine","Einar: Walking to the Fisherman's Lagoon to fish all day.","Hassian: Walks from Hassian's Grove to the pond in Hideaway Bluffs.","Hekla: Wakes up and looks at ruins outside Jina's locked ruin.","Jina: Looks at ruins outside her locked ruin.","Kenyatta: Walks back to the Mayor's Estate to sleep.","Tau: Walks from Hassian's Grove to the pond in Hideaway Bluffs."],
-"4:00 AM":["Auni: Wakes up and walks to the town square.","Badruu: Wakes up, and walks out to the farm.","Caleri: Wakes up and starts her shift at the Library, behind the desk.","Delaila: Gets up and walks to the hay near the Ormuu pen at the farm.","Elouisa: Wakes up and walks to the ruins north of Fisherman's Lagoon.","Eshe: Walks from Eshe's Room in the Mayor's Estate to Elouisa and Caleri's House and stands outside.","Hodari: Goes to the kitchen in Hodari and Najuma's House.","Jel: Turns around and goes back towards the Fisherman's Lagoon.","Nai'o: Leaves bedroom and walks to Ormuu pen near Badruu's Barn.","Reth: Leaves The Underground from his storeroom","Sifuu: Walks from Sifuu's Room in her house towards the Kilima Valley Central Stables fast travel board.","Tamala: Goes to her bedroom."],
-"5:00 AM":["Ashura: Walks upstairs to Ashura's Room to sleep.","Hodari: Walks over to workshop, northeast of the house.","Jel: Turns towards town.","Kenli: Wakes up and heads to the back garden of the Mayor's Estate.","Najuma: Walks to her room to sleep.","Reth: Standing in the path behind the Tailor shop","Sifuu: Stands near small bridge in Mitana Grove, in the Elderwood."],
-"6:00 AM":["Jel: Walks through town and into the Tailor shop.","Tish: Walks from Tish's Room in her house to the big tree off the path near Fisherman's Lagoon."],
-"7:00 AM":["Eshe: Walks to her office in City Hall.","Jel: Goes to his room to sleep.","Kenyatta: Walks to the City Hall to work."],
-"8:00 AM":["Ashura: Walks from Ashura's Room to the open room above the Tavern to workout.","Chayne: Walks over to the Apothecary","Hassian: Leaves the pond and walks to Kilima Valley.","Reth: Walks to the Tavern and starts work","Tamala: Wakes up and makes potions in her house.","Tau: Leaves the pond and walks to Kilima Valley.","Zeki: Waking up to walk to and run the General Store for the day."],
-"8:01 AM":["Hassian: Appears in Kilima Valley and walks to Chapaa Crossing fields between the windmills.","Tau: Appears in Kilima Valley and walks to Chapaa Crossing fields between the windmills."],
-"9:00 AM":["Badruu: Walks over to the farm shop.","Jel: Goes down into the Tailor shop.","Kenli: Walks to City Hall.","Tish: Walks to the Furniture Store."],
-"10:00 AM":["Ashura: Leaves the Tavern and walks to fish along the river northwest of the village towards the Daiya Family Farm.","Auni: Walks east of town to a windmill.","Caleri: Leaves and walks towards the Kilima Valley Central Stables fast travel board.","Elouisa: Walks towards the fast travel board at the Kilima Valley Central Stables.","Hodari: Going to Kilima Valley.","Jel: Stands in the Tailor shop.","Kenli: Naps in his office.","Nai'o: Leaves Ormuu pen and walks to Kilima Central Stables.","Najuma: Wakes up and walks to the east side of the pond near her house."],
-"10:01 AM":["Hodari: Appearing in Kilima Valley and going in to the Tavern."],
-"11:00 AM":["Eshe: Walks outside onto the balcony."],
-"12:00 PM":["Caleri: Stands by the Artifact Store in the Elderwood.","Delaila: Walks from the Ormuu pen at the farm to the General Store.","Elouisa: Stands by the Artifact Store.","Hekla: Walks to the Night Sky Temple.","Jina: Walks to the Night Sky Temple.","Sifuu: Walks towards the Elderwood Central Stables fast travel board.","Tamala: Walks to stand west of Flooded Steps."],
-"1:00 PM":["Badruu: Walks over to the Tavern.","Eshe: Leaves City Hall and stands across the bridge outside of town square between the Tavern and the Tailor."],
-"1:49 PM":["Delaila: Reaches the General Store."],
-"2:00 PM":["Ashura: Walks to the Remembrance Garden and stands at Sabine's remembrance site.","Auni: Heads to the Tavern.","Hassian: Walks to the porch behind the Tavern and plays a card game with Auni.","Hodari: Going back to Bahari Bay.","Sifuu: Arrives in Kilima Valley and walks to the Blacksmith.","Tau: Walks to the porch behind the Tavern."],
-"2:01 PM":["Hodari: Appearing in Bahari Bay and going over to the mines southeast of Pavel Mines."],
-"3:00 PM":["Auni: Stands on the back porch of the Tavern.","Hekla: Walks towards the Library.","Jina: Walks towards the Library."],
-"4:00 PM":["Najuma: Walks to her workshop.","Tamala: Walks to stand north of Bahari Central Stables."],
-"5:00 PM":["Ashura: Leaves the Remembrance Garden and walks back to the Tavern.","Badruu: Walks back to the kitchen at the farm.","Chayne: Walks to the middle of the Tavern","Delaila: Walks from the General Store back home.","Eshe: Walks to the archway leading to Reflection Fields between the Apothecary and Elouisa and Caleri's House.","Hassian: Walks inside the Tavern and stands with Sifuu.","Jel: Walks behind the counter and stands there.","Kenyatta: Walks to the Library.","Reth: Leaves work at the Tavern and walks to the Tailor shop","Tau: Walks inside the Tavern.","Tish: Leaves the Furniture Store and walks to the Tailor to visit with Jel and Reth.","Zeki: Leaves the General Store to walk to the Tavern."],
-"6:00 PM":["Auni: Walks to the kitchen on the farm."],
-"6:45 PM":["Delaila: Reaches the Daiya family kitchen."],
-"6:49 PM":["Kenli: Is in the Tavern."],
+function updatePaliaClock() {
+  const now = new Date();
+  const realMinutes = now.getHours()*60 + now.getMinutes();
+  const realSeconds = now.getSeconds();
+
+  // Palia time: 1 real hour = 24 Palia hours
+  let paliaTotalMinutes = realMinutes*24 + Math.floor(realSeconds*24/60);
+  let paliaHour24 = Math.floor(paliaTotalMinutes/60) % 24;
+  let paliaMinute = Math.floor(paliaTotalMinutes % 60);
+
+  // Convert to 12-hour format
+  let period = paliaHour24 >= 12 ? "PM" : "AM";
+  let paliaHour12 = paliaHour24 % 12;
+  if(paliaHour12 === 0) paliaHour12 = 12;
+
+  // Format HH:MM
+  let hh = paliaHour12.toString().padStart(2,'0');
+  let mm = paliaMinute.toString().padStart(2,'0');
+
+  // Determine phase
+  let phase = '';
+  let emoji = '';
+  if(paliaHour24 >= 3 && paliaHour24 < 6){ phase='Morning'; emoji='🌅'; }
+  else if(paliaHour24 >= 6 && paliaHour24 < 18){ phase='Day'; emoji='🌞'; }
+  else if(paliaHour24 >= 18 && paliaHour24 < 21){ phase='Evening'; emoji='🌇'; }
+  else{ phase='Night'; emoji='🌙'; }
+
+  document.getElementById('palia-clock').textContent=`${hh}:${mm} ${period}`;
+  document.getElementById('palia-phase').textContent=`${phase} ${emoji}`;
+}
+
+setInterval(updatePaliaClock, 1000);
+updatePaliaClock();
+</script>
+</body>
+</html>
