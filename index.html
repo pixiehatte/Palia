@@ -34,7 +34,7 @@
 </head>
 <body>
 <div id="palia-clock-container">
-  <div id="palia-clock">00:00</div>
+  <div id="palia-clock">12:00 AM</div>
   <div id="palia-phase">Phase 🌞</div>
 </div>
 <script>
@@ -42,19 +42,33 @@ function updatePaliaClock() {
   const now = new Date();
   const realMinutes = now.getHours()*60 + now.getMinutes();
   const realSeconds = now.getSeconds();
+
+  // Palia time: 1 real hour = 24 Palia hours
   let paliaTotalMinutes = realMinutes*24 + Math.floor(realSeconds*24/60);
-  let paliaHour = Math.floor(paliaTotalMinutes/60) % 24;
+  let paliaHour24 = Math.floor(paliaTotalMinutes/60) % 24;
   let paliaMinute = Math.floor(paliaTotalMinutes % 60);
-  let hh = paliaHour.toString().padStart(2,'0');
+
+  // Convert to 12-hour format
+  let period = paliaHour24 >= 12 ? "PM" : "AM";
+  let paliaHour12 = paliaHour24 % 12;
+  if(paliaHour12 === 0) paliaHour12 = 12;
+
+  // Format HH:MM
+  let hh = paliaHour12.toString().padStart(2,'0');
   let mm = paliaMinute.toString().padStart(2,'0');
-  let phase='', emoji='';
-  if(paliaHour>=3 && paliaHour<6){phase='Morning';emoji='🌅';}
-  else if(paliaHour>=6 && paliaHour<18){phase='Day';emoji='🌞';}
-  else if(paliaHour>=18 && paliaHour<21){phase='Evening';emoji='🌇';}
-  else{phase='Night';emoji='🌙';}
-  document.getElementById('palia-clock').textContent=`${hh}:${mm}`;
+
+  // Determine phase
+  let phase = '';
+  let emoji = '';
+  if(paliaHour24 >= 3 && paliaHour24 < 6){ phase='Morning'; emoji='🌅'; }
+  else if(paliaHour24 >= 6 && paliaHour24 < 18){ phase='Day'; emoji='🌞'; }
+  else if(paliaHour24 >= 18 && paliaHour24 < 21){ phase='Evening'; emoji='🌇'; }
+  else{ phase='Night'; emoji='🌙'; }
+
+  document.getElementById('palia-clock').textContent=`${hh}:${mm} ${period}`;
   document.getElementById('palia-phase').textContent=`${phase} ${emoji}`;
 }
+
 setInterval(updatePaliaClock, 1000);
 updatePaliaClock();
 </script>
