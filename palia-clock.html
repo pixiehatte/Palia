@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palia Clock</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin:0;
+    background:#e6f4ea;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:'Merriweather', serif;
+  }
+  #palia-clock-container { text-align:center; }
+  #palia-clock {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    padding: 20px 80px;
+    border-radius: 20px;
+    font-size: 48px;
+    color: #3b5a3b;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  #palia-phase {
+    margin-top: 10px;
+    font-size: 24px;
+    color: #3b5a3b;
+  }
+</style>
+</head>
+<body>
+<div id="palia-clock-container">
+  <div id="palia-clock">00:00</div>
+  <div id="palia-phase">Phase 🌞</div>
+</div>
+<script>
+function updatePaliaClock() {
+  const now = new Date();
+  const realMinutes = now.getHours()*60 + now.getMinutes();
+  const realSeconds = now.getSeconds();
+  let paliaTotalMinutes = realMinutes*24 + Math.floor(realSeconds*24/60);
+  let paliaHour = Math.floor(paliaTotalMinutes/60) % 24;
+  let paliaMinute = Math.floor(paliaTotalMinutes % 60);
+  let hh = paliaHour.toString().padStart(2,'0');
+  let mm = paliaMinute.toString().padStart(2,'0');
+  let phase='', emoji='';
+  if(paliaHour>=3 && paliaHour<6){phase='Morning';emoji='🌅';}
+  else if(paliaHour>=6 && paliaHour<18){phase='Day';emoji='🌞';}
+  else if(paliaHour>=18 && paliaHour<21){phase='Evening';emoji='🌇';}
+  else{phase='Night';emoji='🌙';}
+  document.getElementById('palia-clock').textContent=`${hh}:${mm}`;
+  document.getElementById('palia-phase').textContent=`${phase} ${emoji}`;
+}
+setInterval(updatePaliaClock, 1000);
+updatePaliaClock();
+</script>
+</body>
+</html>
